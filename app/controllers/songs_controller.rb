@@ -1,9 +1,21 @@
 class SongsController < ApplicationController
   before_action :set_song, only: %i[ show edit update destroy ]
+  # API_KEY = AIzaSyCNzhpBDVsGThwBDPQCzeH3H2IkV0VY5qY
 
   # GET /songs or /songs.json
   def index
-    @songs = Song.all
+    #@songs = Song.all
+    video = Yt::Video.new url: "https://www.youtube.com/watch?v=zew4Q5LN_N8"
+    
+    raise 'here'
+    video_url = "https://www.youtube.com/watch?v=zew4Q5LN_N8"
+
+    # Use youtube-dl to download only the audio in mp3 format
+    download_command = "youtube-dl -x --audio-format mp3 -o '#{Rails.root}/tmp/%(title)s.%(ext)s' -- '#{video_url}'"
+    system(download_command)
+
+    # Provide the downloaded audio file for download
+    send_file "#{Rails.root}/tmp/#{video.title}.mp3"
   end
 
   # GET /songs/1 or /songs/1.json
