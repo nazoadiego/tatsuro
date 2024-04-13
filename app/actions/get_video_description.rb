@@ -1,19 +1,27 @@
+EXAMPLE_URL = "https://www.youtube.com/watch?v=OycgifzTHgk"
 class GetVideoDescription
-  def initialize(youtube_dl_client: YoutubeDL)
-    @youtube_dl_client = youtube_dl_client
-  end
+  def run(url = EXAMPLE_URL)
+    command = "youtube-dl --skip-download --get-description #{url}"
+    description = %x{#{command}}
 
-  def run(url)
-    state = @youtube_dl_client.download(url, skip_download: true, get_description: true)
-    .on_progress do |state:, line:|
-      puts "Progress: #{state.progress}%"
+    # Split the description into lines
+    lines = description.split("\n")
+
+    # Find the index of the first line with a timestamp
+    first_track_index = lines.index { |line| line.include?('00:') }
+
+    # Find the index of the last line with a timestamp
+    last_track_index = lines.rindex { |line| line.include?(':') }
+
+    # Trim the lines to include only the tracks
+    tracklist_lines = lines[first_track_index..last_track_index]
+
+    # Process each trimmed line
+    tracklist_lines.each do |line|
+      # Split each line into timestamp, title, and track number
+      timestamp, rest = line.split(' ', 2)
+      track_number, title = rest.split('-', 2).map(&:strip)
+      puts "#{timestamp}: #{track_number} - #{title}"
     end
-    .on_error do |state:, line:|
-      puts "Error: #{state.error}"
-    end
-    .on_complete do |state:, line:|
-      puts "Complete: #{state.destination}"
-    end
-    .call
   end
 end

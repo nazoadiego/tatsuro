@@ -1,6 +1,5 @@
 class SongsController < ApplicationController
   before_action :set_song, only: %i[ show edit update destroy ]
-  # API_KEY = AIzaSyCNzhpBDVsGThwBDPQCzeH3H2IkV0VY5qY
 
   # GET /songs or /songs.json
   def index
