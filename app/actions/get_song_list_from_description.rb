@@ -2,7 +2,6 @@ class GetSongListFromDescription
   def run(description)
     lines = description.split("\n").map!(&:strip)
     song_lines = select_song_lines(lines)
-    p song_lines
     songs = parse_songs(song_lines)
   end
 
@@ -10,26 +9,34 @@ class GetSongListFromDescription
 
   def parse_songs(lines)
     songs = lines.each_cons(2).map do |current_song, next_song|
-      timestamp, title = parse_song(current_song)
-      next_timestamp = parse_song(next_song).first
+      song = parse_song(current_song)
+      next_song = parse_song(next_song)
 
-      { start_time: timestamp, end_time: next_timestamp, title: title }
+      { start_time: song[:timestamp], end_time: next_song[:timestamp], title: song[:title] }
     end
 
-    last_timestamp, title = parse_song(lines.last)
-    songs << { start_time: last_timestamp, end_time: nil, title: title }
+    last_song = parse_song(lines.last)
+    songs << { start_time: last_song[:timestamp], end_time: nil, title: last_song[:title] }
 
     songs
   end
 
   def select_song_lines(lines)
-    first_song_index = lines.index { |line| line.include?('00:') }
+    first_song_index = lines.index { |line| line.include?('00:') || line.include?('0:') }
     last_song_index = lines.rindex { |line| line.match?(/^\d{1,2}:\d{2}/)}
 
-    lines[first_song_index..last_song_index]
+    lines[first_song_index..last_song_index].reject(&:empty?)
   end
 
   def parse_song(song_line)
-    song_line.split(' ', 2)
+    timestamp, title = song_line.split(' ', 2)
+
+    timestamp = remove_brackets(timestamp) if timestamp.match?(/\[.*\]/)
+
+    { timestamp:, title: }
+  end
+
+  def remove_brackets(string)
+    string.gsub(/[\[\]]/, '')
   end
 end

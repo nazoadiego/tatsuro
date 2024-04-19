@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe GetSongListFromDescription do
+  subject { described_class.new }
 
-  
   describe '#run' do
-    let(:description_one) {
+    let(:description_long_album) {
       "POV: You are in '80s Japan at a disco during warm summer night 💃
 
       This is an updated and extended version of my previous video!
@@ -51,9 +51,54 @@ RSpec.describe GetSongListFromDescription do
       
       I do not own rights to any music used in this video. Please, support the artists!"
     }
+
+    let(:description_short_album) {
+      "FLAC download: https://www.dropbox.com/s/l1sykuez8n2...
+        
+        0:00 - Look Your Back!
+        4:50 - A Seagull & Clouds
+        9:42 - Flying Beagle
+        16:04 - Fluffy
+        20:51 - Sand Storm
+        26:24 - Baby Talk
+        31:55 - The Second Summer
+        38:00 - Ducky Ducky
+        
+        The Flying Beagle is called Boogie :)"
+    }
+
+    let(:description_brackets) {
+      "[00:00] 01 Wonder Girls - Rewind
+      [03:33] 02 90yonge st - Kona (Feat. Jennifer Choi)
+      [07:10] 03 밀릭 - Door (feat. Jang Pil Soon)
+      [10:46] 04 도시 - lovememore
+      [14:40] 05 지바노프 - Right here (Feat. Rick bridges)
+      
+      [17:45] 06 솔루션스 - MOOD FOR LOVE
+      [21:07] 07 이햐 - Seoul City Pop
+      [24:27] 08 윤종신 - Summer Man
+      [28:55] 09 선미 - Black Pearl
+      [32:25] 10 서교동의 밤 - City Girl City Boy (feat. Dawon)
+      
+      [36:08] 11 uju(우주) - 불을 밝혀줘
+      [39:19] 12 나미 - 가까이 하고 싶은 그대 (Jeon Yonghyeon Remix)
+      [42:55] 13 데이브레이크 - 넌 언제나 (디깅클럽서울 ver.)
+      [47:50] 14 레인보우 노트 (Rainbow note) - 1호선 (Line 1)
+      
+      [51:08] 15 박성신 - 향기로운 그대여 (Jeon Yonghyeon Re-arrange)
+      [54:22] 16 바이 바이 배드맨 - 너의 파도
+      [58:18] 17 버스커버스커 - 벚꽃엔딩 (80s Remix)
+      [01:00:53] 18 뮤지 - 아가씨2 (阿哥氏)
+      [01:04:21] 19 스텔라장 - 아름다워 (디깅클럽서울 ver.)
+      
+      [01:08:15] 20 죠지 - 오랜만에 (디깅클럽서울 Ver.)
+      [01:12:27] 21 우디 - 이 노래가 클럽에서 나온다면 (Fire up 80s yamashita style city pop remix)
+      [01:15:25] 22 유키카 -  Neon (City pop mix)
+      [01:19:40] 23 제인팝 - Drive To 1980 Love (Citypop DEMO)
+      [01:22:47] 24 할라맨 - 이렇게 좋은 날에도"
+    }
     
-    it 'parses the description and returns a list of songs' do
-      subject = described_class.new
+    it 'parses the description of an 1 hour or more album and returns a list of songs' do
       expected_result = [
         { start_time: "00:00", end_time: "05:44", title: "Stay With Me - Miki Matsubara" },
         { start_time: "05:44", end_time: "09:24", title: "Lady Sunshine - Anri" },
@@ -73,9 +118,54 @@ RSpec.describe GetSongListFromDescription do
         { start_time: "01:08:46", end_time: nil, title: "Just a Joke - Yurie Kokubu" },
       ]
 
+      expect(subject.run(description_long_album)).to eq(expected_result)
+    end
+    
+    it 'parses the description of an album of less than an hour and returns a list of songs' do
+      expected_result = [
+        { start_time: "0:00", end_time: "4:50", title: "- Look Your Back!"},
+        { start_time: "4:50", end_time: "9:42", title: "- A Seagull & Clouds"},
+        { start_time: "9:42", end_time: "16:04", title: "- Flying Beagle"},
+        { start_time: "16:04", end_time: "20:51", title: "- Fluffy"},
+        { start_time: "20:51", end_time: "26:24", title: "- Sand Storm"},
+        { start_time: "26:24", end_time: "31:55", title: "- Baby Talk"},
+        { start_time: "31:55", end_time: "38:00", title: "- The Second Summer"},
+        { start_time: "38:00", end_time: nil, title: "- Ducky Ducky"}
+      ]
+
+      expect(subject.run(description_short_album)).to eq(expected_result)
+    end
 
 
-      expect(subject.run(description_one)).to eq(expected_result)
+    it 'parses the description album that puts brackets arount the timestamps and returns a list of songs' do
+      expected_result = [
+        {start_time: "00:00", end_time: "03:33", title: "01 Wonder Girls - Rewind"},
+        {start_time: "03:33", end_time: "07:10", title: "02 90yonge st - Kona (Feat. Jennifer Choi)"},
+        {start_time: "07:10", end_time: "10:46", title: "03 밀릭 - Door (feat. Jang Pil Soon)"},
+        {start_time: "10:46", end_time: "14:40", title: "04 도시 - lovememore"},
+        {start_time: "14:40", end_time: "17:45", title: "05 지바노프 - Right here (Feat. Rick bridges)"},
+        {start_time: "17:45", end_time: "21:07", title: "06 솔루션스 - MOOD FOR LOVE"},
+        {start_time: "21:07", end_time: "24:27", title: "07 이햐 - Seoul City Pop"},
+        {start_time: "24:27", end_time: "28:55", title: "08 윤종신 - Summer Man"},
+        {start_time: "28:55", end_time: "32:25", title: "09 선미 - Black Pearl"},
+        {start_time: "32:25", end_time: "36:08", title: "10 서교동의 밤 - City Girl City Boy (feat. Dawon)"},
+        {start_time: "36:08", end_time: "39:19", title: "11 uju(우주) - 불을 밝혀줘"},
+        {start_time: "39:19", end_time: "42:55", title: "12 나미 - 가까이 하고 싶은 그대 (Jeon Yonghyeon Remix)"},
+        {start_time: "42:55", end_time: "47:50", title: "13 데이브레이크 - 넌 언제나 (디깅클럽서울 ver.)"},
+        {start_time: "47:50", end_time: "51:08", title: "14 레인보우 노트 (Rainbow note) - 1호선 (Line 1)"},
+        {start_time: "51:08", end_time: "54:22", title: "15 박성신 - 향기로운 그대여 (Jeon Yonghyeon Re-arrange)"},
+        {start_time: "54:22", end_time: "58:18", title: "16 바이 바이 배드맨 - 너의 파도"},
+        {start_time: "58:18", end_time: "01:00:53", title: "17 버스커버스커 - 벚꽃엔딩 (80s Remix)"},
+        {start_time: "01:00:53", end_time: "01:04:21", title: "18 뮤지 - 아가씨2 (阿哥氏)"},
+        {start_time: "01:04:21", end_time: "01:08:15", title: "19 스텔라장 - 아름다워 (디깅클럽서울 ver.)"},
+        {start_time: "01:08:15", end_time: "01:12:27", title: "20 죠지 - 오랜만에 (디깅클럽서울 Ver.)"},
+        {start_time: "01:12:27", end_time: "01:15:25", title: "21 우디 - 이 노래가 클럽에서 나온다면 (Fire up 80s yamashita style city pop remix)"},
+        {start_time: "01:15:25", end_time: "01:19:40", title: "22 유키카 -  Neon (City pop mix)"},
+        {start_time: "01:19:40", end_time: "01:22:47", title: "23 제인팝 - Drive To 1980 Love (Citypop DEMO)"},
+        {start_time: "01:22:47", end_time: nil, title: "24 할라맨 - 이렇게 좋은 날에도"}
+      ]
+
+      expect(subject.run(description_brackets)).to eq(expected_result)
     end
   end
 end
