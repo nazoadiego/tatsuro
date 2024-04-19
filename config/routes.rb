@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   resources :songs
   resources :playlists
@@ -6,4 +8,5 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   resource :playlist
   resource :song
+  mount Sidekiq::Web => '/sidekiq'
 end

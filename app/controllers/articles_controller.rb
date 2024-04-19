@@ -3,3 +3,4 @@ class ArticlesController < ActionController::Base
     
   end
 end
+x
