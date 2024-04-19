@@ -167,5 +167,8 @@ RSpec.describe GetSongListFromDescription do
 
       expect(subject.run(description_brackets)).to eq(expected_result)
     end
+
+    pending 'write specific cases for brackets, 0:00 vs 00:00, and empty lines between track lists'
+
   end
 end

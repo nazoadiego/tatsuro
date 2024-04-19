@@ -2,10 +2,10 @@ OUTPUT_FILEPATH = "#{Rails.root}/song.mp3"
 
 class DownloadVideoAudio
   def initialize(youtube_dlp: YoutubeDL)
-    @youtube_dl = youtube_dlp
+    @youtube_dlp = youtube_dlp
   end
 
-  def run_gem(url, start_time, end_time, title)
+  def run(url, start_time, end_time, title)
     options = {
       check_certificate: false,
       extract_audio: true,
@@ -15,7 +15,7 @@ class DownloadVideoAudio
       output: "#{Rails.root}/tmp/#{title}"
     }
 
-    state = @youtube_dl.download(url, **options)
+    state = @youtube_dlp.download(url, **options)
     EventLogger.new.run(state)
   end
 
@@ -24,6 +24,8 @@ class DownloadVideoAudio
     command = "yt-dlp --no-check-certificate -x --audio-format mp3 --audio-quality 0 --download-sections '*#{start_time}-#{end_time}' -o '#{Rails.root}/tmp/#{title}' #{url}"
     song = %x{#{command}}
   end
+
+  private
 
   def download_sections(start_time, end_time)
     return "*#{start_time}" if end_time.nil?
