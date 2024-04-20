@@ -50,6 +50,7 @@ gem "bootsnap", require: false
 
 gem "vite_rails"
 
+# See https://github.com/maxhollmann/ruby-ytdl
 gem 'ytdl'
 gem 'sidekiq'
 

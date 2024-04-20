@@ -23,8 +23,7 @@ class GetSongListFromDescription
       song = parse_song(current_song)
       next_song = parse_song(next_song)
 
-      { start_time: song[:timestamp], 
-      end_time: next_song[:timestamp], title: song[:title] }
+      { start_time: song[:timestamp], end_time: next_song[:timestamp], title: song[:title] }
     end
 
     last_song = parse_song(lines.last)
@@ -37,11 +36,17 @@ class GetSongListFromDescription
     timestamp, title = song_line.split(' ', 2)
 
     timestamp = remove_brackets(timestamp) if timestamp.match?(/\[.*\]/)
+    title = remove_dash(title) if title.match?(/^-/)
+    title = title.strip
 
     { timestamp:, title: }
   end
 
   def remove_brackets(string)
     string.gsub(/[\[\]]/, '')
+  end
+
+  def remove_dash(string)
+    string.gsub(/^-/, '')
   end
 end

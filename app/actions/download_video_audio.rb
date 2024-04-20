@@ -5,6 +5,7 @@ class DownloadVideoAudio
     @youtube_dlp = youtube_dlp
   end
 
+  # TODO: What if we want to download a whole song, without any timestamps?
   def run(url, start_time, end_time, title)
     options = {
       check_certificate: false,

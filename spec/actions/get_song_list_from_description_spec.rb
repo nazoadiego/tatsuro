@@ -112,7 +112,7 @@ RSpec.describe GetSongListFromDescription do
         { start_time: "40:36", end_time: "45:56", title: "Cupid - Miki Matsubara" },
         { start_time: "45:56", end_time: "50:08", title: "Twilight Bay City - S. Kiyotaka & Omega Tribe" },
         { start_time: "50:08", end_time: "54:25", title: "Older Girl - Omega Tribe" },
-        { start_time: "54:25", end_time: "59:39", title: "- Oh no, Oh Yes - Mariya Takeuchi" },
+        { start_time: "54:25", end_time: "59:39", title: "Oh no, Oh Yes - Mariya Takeuchi" },
         { start_time: "59:39", end_time: "01:04:35", title: "Remember Summer Days - Anri" },
         { start_time: "01:04:35", end_time: "01:08:46", title: "Bay City - Junko Yagami" },
         { start_time: "01:08:46", end_time: nil, title: "Just a Joke - Yurie Kokubu" },
@@ -123,14 +123,14 @@ RSpec.describe GetSongListFromDescription do
     
     it 'parses the description of an album of less than an hour and returns a list of songs' do
       expected_result = [
-        { start_time: "0:00", end_time: "4:50", title: "- Look Your Back!"},
-        { start_time: "4:50", end_time: "9:42", title: "- A Seagull & Clouds"},
-        { start_time: "9:42", end_time: "16:04", title: "- Flying Beagle"},
-        { start_time: "16:04", end_time: "20:51", title: "- Fluffy"},
-        { start_time: "20:51", end_time: "26:24", title: "- Sand Storm"},
-        { start_time: "26:24", end_time: "31:55", title: "- Baby Talk"},
-        { start_time: "31:55", end_time: "38:00", title: "- The Second Summer"},
-        { start_time: "38:00", end_time: nil, title: "- Ducky Ducky"}
+        { start_time: "0:00", end_time: "4:50", title: "Look Your Back!"},
+        { start_time: "4:50", end_time: "9:42", title: "A Seagull & Clouds"},
+        { start_time: "9:42", end_time: "16:04", title: "Flying Beagle"},
+        { start_time: "16:04", end_time: "20:51", title: "Fluffy"},
+        { start_time: "20:51", end_time: "26:24", title: "Sand Storm"},
+        { start_time: "26:24", end_time: "31:55", title: "Baby Talk"},
+        { start_time: "31:55", end_time: "38:00", title: "The Second Summer"},
+        { start_time: "38:00", end_time: nil, title: "Ducky Ducky"}
       ]
 
       expect(subject.run(description_short_album)).to eq(expected_result)
@@ -169,6 +169,5 @@ RSpec.describe GetSongListFromDescription do
     end
 
     pending 'write specific cases for brackets, 0:00 vs 00:00, and empty lines between track lists'
-
   end
 end
