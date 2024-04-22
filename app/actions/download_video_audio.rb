@@ -1,11 +1,9 @@
-OUTPUT_FILEPATH = "#{Rails.root}/song.mp3"
-
 class DownloadVideoAudio
-  def initialize(youtube_dlp: YoutubeDL)
+  def initialize(youtube_dlp: YoutubeDL, event_logger: EventLogger.new)
     @youtube_dlp = youtube_dlp
+    @event_logger = event_logger
   end
 
-  # TODO: What if we want to download a whole song, without any timestamps?
   def run(url, start_time, end_time, title)
     options = {
       check_certificate: false,
@@ -13,17 +11,17 @@ class DownloadVideoAudio
       audio_format: 'mp3',
       audio_quality: 0,
       download_sections: download_sections(start_time, end_time),
-      output: "#{Rails.root}/tmp/#{title}"
+      output: output_path(title)
     }
 
     state = @youtube_dlp.download(url, **options)
-    EventLogger.new.run(state)
+    @event_logger.run(state)
   end
 
   def run_dlp(url, start_time, end_time, title)
     p "#{start_time} - #{end_time} - #{title} started"
     command = "yt-dlp --no-check-certificate -x --audio-format mp3 --audio-quality 0 --download-sections '*#{start_time}-#{end_time}' -o '#{Rails.root}/tmp/#{title}' #{url}"
-    song = %x{#{command}}
+    %x{#{command}}
   end
 
   private
@@ -32,5 +30,9 @@ class DownloadVideoAudio
     return "*#{start_time}" if end_time.nil?
 
     "*#{start_time}-#{end_time}"
+  end
+
+  def output_path(title)
+    "#{Rails.root}/tmp/downloads/#{title}"
   end
 end

@@ -1,12 +1,22 @@
 class GetVideoDescription
   def run(url)
-    raise NotAYoutubeUrlError unless url.include?('youtube')
+    raise NotAYoutubeUrlError unless youtube_url?(url)
 
-    command = "youtube-dl --skip-download --get-description #{url}"
-    description = %x{#{command}}
+    description = fetch_description(url)
 
     raise NoDescriptionFoundError if description.empty?
 
     description
+  end
+
+  private
+
+  def youtube_url?(url)
+    url.include?('youtube')
+  end
+
+  def fetch_description(url)
+    command = "youtube-dl --skip-download --get-description #{url}"
+    %x{#{command}}
   end
 end
