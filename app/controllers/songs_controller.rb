@@ -3,18 +3,12 @@ class SongsController < ApplicationController
 
   # GET /songs or /songs.json
   def index
-    #@songs = Song.all
-    video = Yt::Video.new url: "https://www.youtube.com/watch?v=zew4Q5LN_N8"
-    
-    raise 'here'
-    video_url = "https://www.youtube.com/watch?v=zew4Q5LN_N8"
-
-    # Use youtube-dl to download only the audio in mp3 format
-    download_command = "youtube-dl -x --audio-format mp3 -o '#{Rails.root}/tmp/%(title)s.%(ext)s' -- '#{video_url}'"
-    system(download_command)
-
-    # Provide the downloaded audio file for download
-    send_file "#{Rails.root}/tmp/#{video.title}.mp3"
+    if params[:url].present?
+      description = GetVideoDescription.new.run(params[:url])
+      @songs = GetSongListFromDescription.new.run(description)
+    else
+      @songs = []
+    end
   end
 
   # GET /songs/1 or /songs/1.json
@@ -32,17 +26,9 @@ class SongsController < ApplicationController
 
   # POST /songs or /songs.json
   def create
-    @song = Song.new(song_params)
-
-    respond_to do |format|
-      if @song.save
-        format.html { redirect_to song_url(@song), notice: "Song was successfully created." }
-        format.json { render :show, status: :created, location: @song }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @song.errors, status: :unprocessable_entity }
-      end
-    end
+    song_list = JSON.parse(params[:song_list], symbolize_names: true)
+    DownloadSongList.new(params[:url]).run(song_list)
+    redirect_to songs_path(url: params[:url]), notice: 'Download process initiated.'
   end
 
   # PATCH/PUT /songs/1 or /songs/1.json

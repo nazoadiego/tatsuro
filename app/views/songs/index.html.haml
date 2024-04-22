@@ -1,0 +1,17 @@
+%h1 Songs
+= link_to 'Go back', :back
+
+= form_tag(songs_path, method: :get) do
+  = text_field_tag :url, params[:url], placeholder: 'Enter YouTube URL'
+  = submit_tag 'Fetch Songs'
+
+- if @songs.any?
+  %ul
+    - @songs.each do |song|
+      %li= "#{song[:title]} - #{song[:start_time]}  "
+  = form_with(url: songs_path, method: :post) do |form|
+    = hidden_field_tag 'song_list', @songs.to_json
+    = hidden_field_tag 'url', params[:url]
+    = form.submit 'Download'
+- else
+  %p No songs found.
