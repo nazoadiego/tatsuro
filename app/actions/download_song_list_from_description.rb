@@ -1,4 +1,4 @@
-class OrchestrateSongListDownload
+class DownloadSongListFromDescription
   def initialize(
     url,
     download_song_list = DownloadSongList.new(url),
@@ -15,7 +15,7 @@ class OrchestrateSongListDownload
   def run(description_text = nil)
     description = description_text || fetch_description
     song_list = @get_song_list_from_description.run(description)
-    @download_song_list.run
+    @download_song_list.run(song_list)
   end
 
   private

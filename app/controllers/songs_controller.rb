@@ -1,9 +1,11 @@
 class SongsController < ApplicationController
   before_action :set_song, only: %i[ show edit update destroy ]
 
+  # Should move this to a song download controller probably
   # GET /songs or /songs.json
   def index
     if params[:url].present?
+      # Might be worth it to cache this
       description = GetVideoDescription.new.run(params[:url])
       @songs = GetSongListFromDescription.new.run(description)
     else
@@ -24,6 +26,7 @@ class SongsController < ApplicationController
   def edit
   end
 
+  # Should move this to a song download controller probably
   # POST /songs or /songs.json
   def create
     song_list = JSON.parse(params[:song_list], symbolize_names: true)

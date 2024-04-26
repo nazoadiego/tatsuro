@@ -98,6 +98,37 @@ RSpec.describe GetSongListFromDescription do
       [01:22:47] 24 할라맨 - 이렇게 좋은 날에도"
     }
     
+    let(:description_with_index) {
+      "
+        ***********************
+
+        🎧 Setlist:
+        0) 00:00 Intro
+        1) 01:26 Prelude 3.0
+        2) 04:04 The Blister Exists
+        3) 09:12 The Dying Song (Time to Sing)
+        4) 12:20 Liberate
+        5) 16:00 Yen
+        6) 21:12 Psychosocial
+        7) 27:34 The Devil in I
+        8) 33:50 The Heretic Anthem
+        9) 38:51 Eyeless
+        10) 46:41 Wait and Bleed
+        11) 49:25 Unsainted
+        12) 56:09 Snuff
+        13) 1:00:17 Purity
+        14) 1:06:07 People = Shit
+        15) 1:10:02 Surfacing
+        16) 1:15:35 Duality
+        17) 1:19:57 Spit It Out
+
+
+        *********************
+
+        👉 Subscribe here for more! 
+      "
+    }
+
     it 'parses the description of an 1 hour or more album and returns a list of songs' do
       expected_result = [
         { start_time: "00:00", end_time: "05:44", title: "Stay With Me - Miki Matsubara" },
@@ -137,7 +168,7 @@ RSpec.describe GetSongListFromDescription do
     end
 
 
-    it 'parses the description album that puts brackets arount the timestamps and returns a list of songs' do
+    it 'parses the description of an album that puts brackets arount the timestamps and returns a list of songs' do
       expected_result = [
         {start_time: "00:00", end_time: "03:33", title: "01 Wonder Girls - Rewind"},
         {start_time: "03:33", end_time: "07:10", title: "02 90yonge st - Kona (Feat. Jennifer Choi)"},
@@ -166,6 +197,33 @@ RSpec.describe GetSongListFromDescription do
       ]
 
       expect(subject.run(description_brackets)).to eq(expected_result)
+    end
+
+
+    it 'parses the description of an album that puts brackets arount the timestamps and returns a list of songs' do
+      expected_result = [
+        { start_time: "00:00", end_time: "01:26", title: "Intro" },
+        { start_time: "01:26", end_time: "04:04", title: "Prelude 3.0" },
+        { start_time: "04:04", end_time: "09:12", title: "The Blister Exists" },
+        { start_time: "09:12", end_time: "12:20", title: "The Dying Song (Time to Sing)" },
+        { start_time: "12:20", end_time: "16:00", title: "Liberate" },
+        { start_time: "16:00", end_time: "21:12", title: "Yen" },
+        { start_time: "21:12", end_time: "27:34", title: "Psychosocial" },
+        { start_time: "27:34", end_time: "33:50", title: "The Devil in I" },
+        { start_time: "33:50", end_time: "38:51", title: "The Heretic Anthem" },
+        { start_time: "38:51", end_time: "46:41", title: "Eyeless" },
+        { start_time: "46:41", end_time: "49:25", title: "Wait and Bleed" },
+        { start_time: "49:25", end_time: "56:09", title: "Unsainted" },
+        { start_time: "56:09", end_time: "1:00:17", title: "Snuff" },
+        { start_time: "1:00:17", end_time: "1:06:07", title: "Purity" },
+        { start_time: "1:06:07", end_time: "1:10:02", title: "People = Shit" },
+        { start_time: "1:10:02", end_time: "1:15:35", title: "Surfacing" },
+        { start_time: "1:15:35", end_time: "1:19:57", title: "Duality" },
+        { start_time: "1:19:57", end_time: nil, title: "Spit It Out" }
+      ]
+
+      p subject.run(description_with_index)
+      expect(subject.run(description_with_index)).to eq(expected_result)
     end
 
     pending 'write specific cases for brackets, 0:00 vs 00:00, and empty lines between track lists'

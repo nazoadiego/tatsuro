@@ -1,5 +1,5 @@
 %h1 Songs
-= link_to 'Go back', :back
+= link_to 'Go back', songs_path
 
 = form_tag(songs_path, method: :get) do
   = text_field_tag :url, params[:url], placeholder: 'Enter YouTube URL'
