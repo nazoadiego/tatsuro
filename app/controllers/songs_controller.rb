@@ -4,13 +4,12 @@ class SongsController < ApplicationController
   # Should move this to a song download controller probably
   # GET /songs or /songs.json
   def index
-    if params[:url].present?
-      # Might be worth it to cache this
-      description = GetVideoDescription.new.run(params[:url])
-      @songs = GetSongListFromDescription.new.run(description)
-    else
-      @songs = []
+    if params[:url].nil? 
+      @songs = [] and return
     end
+
+    description = GetVideoDescription.new.run(params[:url])
+    @songs = GetSongListFromDescription.new.run(description)
   end
 
   # GET /songs/1 or /songs/1.json

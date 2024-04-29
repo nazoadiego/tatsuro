@@ -6,9 +6,9 @@
   = submit_tag 'Fetch Songs'
 
 - if @songs.any?
-  %ul
+  %ul.flex
     - @songs.each do |song|
-      %li= "#{song[:title]} - #{song[:start_time]}  "
+      %li= "#{song[:title]} - #{song[:start_time]}"
   = form_with(url: songs_path, method: :post) do |form|
     = hidden_field_tag 'song_list', @songs.to_json
     = hidden_field_tag 'url', params[:url]
