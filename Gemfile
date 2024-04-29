@@ -83,3 +83,5 @@ group :test do
 end
 
 gem "tailwindcss-rails", "~> 2.5"
+gem "view_component"
+gem "hotwire-livereload", "~> 1.3", :group => :development

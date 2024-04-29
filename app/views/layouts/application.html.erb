@@ -20,11 +20,12 @@
 
       Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
     -->
+    <%= hotwire_livereload_tags if Rails.env.development? %>
 
   </head>
 
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <main class="container mx-auto mt-28 px-5">
       <%= yield %>
     </main>
   </body>

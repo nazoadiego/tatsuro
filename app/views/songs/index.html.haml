@@ -1,14 +1,15 @@
 %h1 Songs
-= link_to 'Go back', songs_path
+= link_to 'Go back', songs_path, class: "p-4"
 
 = form_tag(songs_path, method: :get) do
   = text_field_tag :url, params[:url], placeholder: 'Enter YouTube URL'
   = submit_tag 'Fetch Songs'
 
 - if @songs.any?
-  %ul.flex
+  .columns-3
     - @songs.each do |song|
-      %li= "#{song[:title]} - #{song[:start_time]}"
+      = render(SongCardComponent.new(title: song[:title], start_time: song[:start_time],
+                                     end_time: song[:end_time], url: params[:url]))
   = form_with(url: songs_path, method: :post) do |form|
     = hidden_field_tag 'song_list', @songs.to_json
     = hidden_field_tag 'url', params[:url]
