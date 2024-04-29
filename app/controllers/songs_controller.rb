@@ -25,12 +25,11 @@ class SongsController < ApplicationController
   def edit
   end
 
-  # Should move this to a song download controller probably
   # POST /songs or /songs.json
   def create
     song_list = JSON.parse(params[:song_list], symbolize_names: true)
     DownloadSongList.new(params[:url]).run(song_list)
-    redirect_to songs_path(url: params[:url]), notice: 'Download process initiated.'
+    redirect_to songs_path(url: params[:url]), notice: 'Download started!'
   end
 
   # PATCH/PUT /songs/1 or /songs/1.json
@@ -58,12 +57,12 @@ class SongsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_song
-      @song = Song.find(params[:id])
-    end
+  def set_song
+    @song = Song.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def song_params
-      params.require(:song).permit(:title, :url)
-    end
+  # Only allow a list of trusted parameters through.
+  def song_params
+    params.require(:song).permit(:title, :url)
+  end
 end
