@@ -1,4 +1,5 @@
-.border-2.solid.rounded-xl.p-4.flex.items-center.gap-2.bg-zinc-600.hover
+.border-2.solid.rounded-xl.p-4.flex.items-center.gap-2{ class: download_status_style }
   = image_tag('flying.jpeg', class: "rounded-full max-w-20")
   = link_to(song_url, class: "py-2") do
     = "#{timestamp} - #{@title}"
+    = @status

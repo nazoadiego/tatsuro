@@ -84,3 +84,6 @@ end
 
 gem "tailwindcss-rails", "~> 2.5"
 gem "view_component"
+
+# See more https://github.com/kenaniah/sidekiq-status
+gem 'sidekiq-status'

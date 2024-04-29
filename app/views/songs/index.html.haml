@@ -1,17 +1,17 @@
 = link_to 'Go back', songs_path, class: "p-4 b"
-%h2.text-4xl.mt-2
+%h2.text-4xl
   Tatsuro! Download songs from youtube
 
 .py-4
   = form_tag(songs_path, method: :get) do
-    = text_field_tag :url, params[:url], placeholder: 'Enter YouTube URL', class: "rounded-lg text-black"
+    = text_field_tag :url, params[:url], placeholder: 'Enter YouTube URL', class: "rounded-lg text-black w-1/3"
     = submit_tag 'Fetch Songs', class: "bg-zinc-500 p-2 rounded-lg"
 
 - if @songs.any?
   .grid.grid-cols-3.gap-4.mb-4
     - @songs.each do |song|
       = render(SongCardComponent.new(title: song[:title], start_time: song[:start_time],
-                                     end_time: song[:end_time], url: params[:url]))
+                                     end_time: song[:end_time], url: params[:url], status: song[:status]))
   = form_with(url: songs_path, method: :post) do |form|
     = hidden_field_tag 'song_list', @songs.to_json
     = hidden_field_tag 'url', params[:url]

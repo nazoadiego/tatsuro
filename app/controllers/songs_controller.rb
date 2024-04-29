@@ -8,8 +8,16 @@ class SongsController < ApplicationController
       @songs = [] and return
     end
 
+
+
     description = GetVideoDescription.new.run(params[:url])
     @songs = GetSongListFromDescription.new.run(description)
+    @songs = @songs.map do |song|
+      key = params[:url] + song[:start_time]
+      job_id = Rails.cache.fetch(key)
+      song[:status] = Sidekiq::Status::status(job_id)
+      song
+    end
   end
 
   # GET /songs/1 or /songs/1.json
